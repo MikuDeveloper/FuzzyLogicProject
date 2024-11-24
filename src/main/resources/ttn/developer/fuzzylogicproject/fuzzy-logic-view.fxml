@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<ScrollPane fitToHeight="true" fitToWidth="true" minViewportHeight="400.0" minViewportWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ttn.developer.fuzzylogicproject.FuzzyLogicController">
+   <content>
+      <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0">
+         <top>
+             <HBox alignment="CENTER" prefHeight="50.0" prefWidth="800.0" style="-fx-background-color: #379e90;">
+               <ImageView fitHeight="32.0" fitWidth="32.0" onMouseClicked="#backToHome" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@icons/back.png" />
+                  </image>
+                  <cursor>
+                     <Cursor fx:constant="HAND" />
+                  </cursor>
+               </ImageView>
+                 <Label text="Robot Bank" textFill="WHITE">
+                    <font>
+                        <Font name="System Bold" size="20.0" />
+                    </font>
+                  <HBox.margin>
+                     <Insets left="10.0" />
+                  </HBox.margin>
+                 </Label>
+             </HBox>
+         </top>
+         <bottom>
+            <HBox fx:id="userAnswerBox" alignment="CENTER" prefHeight="80.0" prefWidth="800.0" spacing="20.0" style="-fx-border-width: 3px 0 0; -fx-border-color: #555;" BorderPane.alignment="CENTER">
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </HBox>
+         </bottom>
+         <center>
+            <ScrollPane fx:id="conversationPane" fitToHeight="true" fitToWidth="true" BorderPane.alignment="CENTER">
+               <content>
+                  <VBox fx:id="conversationBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="479.0" prefWidth="810.0">
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding></VBox>
+               </content>
+            </ScrollPane>
+         </center>
+      </BorderPane>
+   </content>
+</ScrollPane>

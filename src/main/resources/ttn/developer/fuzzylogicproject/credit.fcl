@@ -1,0 +1,41 @@
+FUNCTION_BLOCK credito
+
+VAR_INPUT
+    puntuacion_credito : REAL;  // Puntuación de crédito del cliente
+    ingreso_mensual : REAL;     // Ingreso mensual del cliente
+END_VAR
+
+VAR_OUTPUT
+    credito_otorgado : REAL;    // Cantidad de crédito otorgado
+END_VAR
+
+FUZZIFY puntuacion_credito
+    TERM baja := (0, 1) (150, 1) (240, 0);
+    TERM media := (150, 0) (475, 1) (600, 0);
+    TERM alta := (475, 0) (700, 1) (775, 1);
+END_FUZZIFY
+
+FUZZIFY ingreso_mensual
+    TERM bajo := (0, 1) (4000, 1) (8000, 0);
+    TERM medio := (6000, 0) (10000, 1) (15000, 0);
+    TERM alto := (10000, 0) (18000, 1) (23000, 1);
+END_FUZZIFY
+
+DEFUZZIFY credito_otorgado
+    TERM bajo := (0, 1) (5000, 0);
+    TERM medio := (0, 0) (5000, 1) (10000, 0);
+    TERM alto := (10000, 0) (20000, 1);
+    METHOD : COG;  // Centro de gravedad
+END_DEFUZZIFY
+
+RULEBLOCK No1
+    RULE 1 : IF puntuacion_credito IS baja OR ingreso_mensual IS bajo THEN credito_otorgado IS bajo;
+    RULE 2 : IF puntuacion_credito IS media AND ingreso_mensual IS medio THEN credito_otorgado IS medio;
+    RULE 3 : IF puntuacion_credito IS alta AND ingreso_mensual IS alto THEN credito_otorgado IS alto;
+    RULE 4 : IF puntuacion_credito IS baja AND ingreso_mensual IS alto THEN credito_otorgado IS medio;
+    RULE 5 : IF puntuacion_credito IS alta AND ingreso_mensual IS bajo THEN credito_otorgado IS medio;
+    RULE 6 : IF puntuacion_credito IS media AND ingreso_mensual IS alto THEN credito_otorgado IS alto;
+    RULE 7 : IF puntuacion_credito IS media AND ingreso_mensual IS bajo THEN credito_otorgado IS bajo;
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK
