@@ -79,23 +79,14 @@ public class FuzzyLogicController implements Initializable {
         Label messageLabel = generateMessageLabel(message);
         HBox bubbleBox = generateBubbleBox(profilePhoto, messageLabel, dots);
 
-        if (turn == 'u')
-            return new Thread(() -> Platform.runLater(() -> {
-                addMessageAnimation(bubbleBox);
-                conversationBox.getChildren().add(bubbleBox);
-                conversationPane.vvalueProperty().bind(bubbleBox.layoutYProperty().divide(conversationPane.getHeight()));
-            }));
+        if (turn == 'u') return new Thread(() -> Platform.runLater(() -> addToConversationBox(bubbleBox)));
 
         Timeline timeline = setTypingAnimation(dots);
         timeline.play();
 
         return new Thread(() -> {
             try {
-                Platform.runLater(() -> {
-                    addMessageAnimation(bubbleBox);
-                    conversationBox.getChildren().add(bubbleBox);
-                    conversationPane.vvalueProperty().bind(bubbleBox.layoutYProperty().divide(conversationPane.getHeight()));
-                });
+                Platform.runLater(() -> addToConversationBox(bubbleBox));
                 Thread.sleep(message.length() * 25L);
             } catch (InterruptedException e) {
                 System.out.println(e.getMessage());
@@ -104,22 +95,12 @@ public class FuzzyLogicController implements Initializable {
                 removeTypingAnimation(timeline, bubbleBox, messageLabel);
                 if (changeTurn) {
                     turn = 'u';
-
                     if (Objects.equals(currentQuestion.question(), "¿Cuáles son tus ingresos mensuales netos?")) {
                         TextField textField = getTextField();
                         textField.getStyleClass().add("input");
                         Button setAmount = new Button("Agregar");
                         setAmount.getStyleClass().add("material-button");
-                        setAmount.setOnMouseClicked(event -> {
-                            if (textField.getText() != null && !textField.getText().isEmpty()) {
-                                FuzzyLogicApplication.incomeAmount = Integer.parseInt(textField.getText());
-                                DecimalFormat formatter = new DecimalFormat("$###,###.##");
-                                String number = formatter.format(FuzzyLogicApplication.incomeAmount);
-                                userAnswerBox.getChildren().clear();
-                                generateMessage(number, true).start();
-                                changeTurnToRobot();
-                            }
-                        });
+                        setAmount.setOnMouseClicked(event -> formatInput(textField));
                         userAnswerBox.getChildren().addAll(textField, setAmount);
                     } else {
                         for (String question : currentQuestion.answers().keySet()) {
@@ -132,6 +113,23 @@ public class FuzzyLogicController implements Initializable {
                 }
             });
         });
+    }
+
+    private void formatInput(TextField textField) {
+        if (textField.getText() != null && !textField.getText().isEmpty()) {
+            FuzzyLogicApplication.incomeAmount = Integer.parseInt(textField.getText());
+            DecimalFormat formatter = new DecimalFormat("$###,###.##");
+            String number = formatter.format(FuzzyLogicApplication.incomeAmount);
+            userAnswerBox.getChildren().clear();
+            generateMessage(number, true).start();
+            changeTurnToRobot();
+        }
+    }
+
+    private void addToConversationBox(HBox bubbleBox) {
+        addMessageAnimation(bubbleBox);
+        conversationBox.getChildren().add(bubbleBox);
+        conversationPane.vvalueProperty().bind(bubbleBox.layoutYProperty().divide(conversationPane.getHeight()));
     }
 
     private static TextField getTextField() {
