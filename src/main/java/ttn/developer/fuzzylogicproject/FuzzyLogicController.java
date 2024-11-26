@@ -56,14 +56,14 @@ public class FuzzyLogicController implements Initializable {
         messages.add(generateMessage("Buen día, estimado cliente.", false));
         messages.add(generateMessage("Comenzaremos por hacerle una serie de preguntas.", false));
         messages.add(generateMessage("Responda con sinceridad para poder determinar si podremos ofrecerle una línea de crédito en nuestro banco.", false));
-        messages.add(generateMessage(currentQuestion.getQuestion(), true));
+        messages.add(generateMessage(currentQuestion.question(), true));
         SendMessages send = new SendMessages(messages);
         new Thread(send).start();
     }
 
     void onClickAnswer(MouseEvent event) {
         String answer = ((Label) event.getSource()).getText();
-        FuzzyLogicApplication.pointerCounter += model.getAnswerValue(currentQuestion.getId() - 1, answer);
+        FuzzyLogicApplication.pointerCounter += model.getAnswerValue(currentQuestion.id() - 1, answer);
         generateMessage(answer, true).start();
         userAnswerBox.getChildren().clear();
         changeTurnToRobot();
@@ -105,7 +105,7 @@ public class FuzzyLogicController implements Initializable {
                 if (changeTurn) {
                     turn = 'u';
 
-                    if (Objects.equals(currentQuestion.getQuestion(), "¿Cuáles son tus ingresos mensuales netos?")) {
+                    if (Objects.equals(currentQuestion.question(), "¿Cuáles son tus ingresos mensuales netos?")) {
                         TextField textField = getTextField();
                         textField.getStyleClass().add("input");
                         Button setAmount = new Button("Agregar");
@@ -122,7 +122,7 @@ public class FuzzyLogicController implements Initializable {
                         });
                         userAnswerBox.getChildren().addAll(textField, setAmount);
                     } else {
-                        for (String question : currentQuestion.getAnswers().keySet()) {
+                        for (String question : currentQuestion.answers().keySet()) {
                             Label answerLabel = new Label(question);
                             answerLabel.getStyleClass().addAll("chat-message-user", "answer");
                             answerLabel.setOnMouseClicked(this::onClickAnswer);
@@ -156,7 +156,7 @@ public class FuzzyLogicController implements Initializable {
         turn = 'r';
         if (model.hasNextQuestion()) {
             currentQuestion = model.nextQuestion();
-            generateMessage(currentQuestion.getQuestion(), true).start();
+            generateMessage(currentQuestion.question(), true).start();
         } else {
             FuzzyLogicApplication.setRoot("result-view");
         }

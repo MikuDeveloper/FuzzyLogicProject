@@ -36,7 +36,7 @@ public class FuzzyLogicModel {
     public int getAnswerValue(int id, String answer) {
         return this.questions
             .get(id)
-            .getAnswers()
+            .answers()
             .get(answer);
     }
 
